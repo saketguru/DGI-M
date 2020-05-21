@@ -2,11 +2,11 @@ import numpy as np
 import scipy.sparse as sp
 import torch
 import torch.nn as nn
-
+import sys
 from models import DGI, LogReg
 from utils import process
 
-dataset = 'cora'
+dataset = sys.argv[1] #'cora'
 
 # training params
 batch_size = 1

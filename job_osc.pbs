@@ -1,0 +1,20 @@
+#!/bin/sh
+#PBS -l nodes=1:ppn=28
+#PBS -l walltime=00:59:00
+#PBS -j oe
+#PBS -A PAS0166
+
+set -x
+set -e
+
+cd $PBS_O_WORKDIR
+
+source ~/.bashrc
+source activate gpstrails
+
+
+python execute.py $db
+
+#python my_execute.py $1
+
+

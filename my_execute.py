@@ -6,15 +6,15 @@ import sys
 from models import DGI, LogReg
 from utils import process
 
-dataset = 'philadelphia'
+dataset = sys.argv[1]
 
 # training params
 batch_size = 1
 nb_epochs = 10000
 patience = 20
 lr = 0.001
-l2_coef = float(sys.argv[1])
-drop_prob = float(sys.argv[2])
+l2_coef = 0.0
+drop_prob = 0.0
 hid_units = 128
 sparse = True
 nonlinearity = 'prelu'  # special name to separate parameters
