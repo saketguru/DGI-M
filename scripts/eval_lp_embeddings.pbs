@@ -1,0 +1,21 @@
+#!/bin/sh
+#PBS -l nodes=1:ppn=4
+#PBS -l walltime=00:59:00
+#PBS -j oe
+#PBS -o pbs_results/
+#PBS -A PAS0166
+
+set -x
+set -e
+
+cd $PBS_O_WORKDIR
+
+source ~/.bashrc
+source activate gpstrails
+
+
+python ../link_prediction_main_fn.py  --input_graph_dir ${igd} --file_name "fold" --dataset ${data} --output_file_name ${ofn} --input_embedding0_dir ${ied0} --embedding0_file_name ${iefn} \
+--share_embeddings --num_folds 5 --emb_size 128 --algorithm DGI
+
+
+

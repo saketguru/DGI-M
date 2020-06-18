@@ -1,0 +1,20 @@
+#!/bin/sh
+#PBS -l nodes=1:ppn=4
+#PBS -l walltime=00:59:00
+#PBS -j oe
+#PBS -o pbs_results/
+#PBS -A PAS0166
+
+set -x
+set -e
+
+cd $PBS_O_WORKDIR
+
+source ~/.bashrc
+source activate gpstrails
+
+
+python ../node_classification.py --emb ${emb} --network ${nw} --dataset ${db} --algorithm dgi --training_percents "[0.5]"
+
+
+

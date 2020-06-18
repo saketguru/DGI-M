@@ -3,21 +3,16 @@ import numpy as np
 from gensim.models import KeyedVectors
 import csv
 import ast
-import json
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix, f1_score, classification_report
+from sklearn.metrics import f1_score
 from collections import Counter
-from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
+from sklearn.model_selection import StratifiedShuffleSplit
 from imblearn.over_sampling import RandomOverSampler
-from imblearn.combine import SMOTEENN
-from sklearn.preprocessing import normalize
 import geopy.distance
 from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.utils import resample
-from classification import get_dataset_for_classification, logistic_regression_classification
+from classification import logistic_regression_classification
 from sklearn.utils import shuffle
 import pickle
 from mutils import read_graph
@@ -301,7 +296,7 @@ def compute_microf1_multi_label(X, y, grid_search):
 if __name__ == '__main__':
     dataset = sys.argv[1]
     embeds = np.load(dataset)
-    from create_graph import Ctrl
+    from scripts.create_graph import Ctrl
 
     ctrl = Ctrl()
     ctrl.debug_mode = False

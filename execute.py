@@ -10,11 +10,11 @@ dataset = sys.argv[1] #'cora'
 
 # training params
 batch_size = 1
-nb_epochs = 10000
+nb_epochs = 100
 patience = 20
-lr = 0.001
+lr = 0.01
 l2_coef = 0.0
-drop_prob = 0.0
+drop_prob = 0.2
 hid_units = 128
 sparse = True
 nonlinearity = 'prelu'  # special name to separate parameters
@@ -112,18 +112,18 @@ val_lbls = torch.argmax(labels[0, idx_val], dim=1)
 test_lbls = torch.argmax(labels[0, idx_test], dim=1)
 
 tot = torch.zeros(1)
-tot = tot.cuda()
+tot = tot
 
 accs = []
 
 for _ in range(50):
     log = LogReg(hid_units, nb_classes)
     opt = torch.optim.Adam(log.parameters(), lr=0.01, weight_decay=0.0)
-    log.cuda()
+
 
     pat_steps = 0
     best_acc = torch.zeros(1)
-    best_acc = best_acc.cuda()
+    best_acc = best_acc
     for _ in range(100):
         log.train()
         opt.zero_grad()

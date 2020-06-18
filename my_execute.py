@@ -18,8 +18,7 @@ drop_prob = 0.0
 hid_units = 128
 sparse = True
 nonlinearity = 'prelu'  # special name to separate parameters
-
-# adj, features, labels, idx_train, idx_val, idx_test = process.load_data(dataset)
+model_name = 'link_prediction_embeddings/%s.pkl' % (dataset)
 
 adj, features, idx_train = process.my_load_data(dataset)
 features, _ = process.preprocess_features(features)
@@ -85,7 +84,7 @@ for epoch in range(nb_epochs):
         best = loss
         best_t = epoch
         cnt_wait = 0
-        torch.save(model.state_dict(), 'best_dgi%s_%s_%s.pkl' % (dataset, l2_coef, drop_prob))
+        torch.save(model.state_dict(), model_name)
     else:
         cnt_wait += 1
 
@@ -97,8 +96,57 @@ for epoch in range(nb_epochs):
     optimiser.step()
 
 print('Loading {}th epoch'.format(best_t))
-model.load_state_dict(torch.load('best_dgi%s_%s_%s.pkl' % (dataset, l2_coef, drop_prob)))
+model.load_state_dict(torch.load(model_name))
 
 embeds, _ = model.embed(features, sp_adj if sparse else adj, sparse, None)
 embeds = embeds.to("cpu", torch.double).numpy()
-np.save("%s_%s_%s.emb" % (dataset, l2_coef, drop_prob), embeds)
+print ("%s.emb" % model_name)
+np.save("%s.emb" % model_name, embeds)
+
+# n_adj, n_features, n_labels, n_idx_train, n_idx_val, n_idx_test = process.load_data(dataset)
+# idx_val = n_idx_val
+# idx_test = n_idx_test
+# labels = n_labels
+#
+# train_embs = embeds[0, idx_train]
+# val_embs = embeds[0, idx_val]
+# test_embs = embeds[0, idx_test]
+#
+# train_lbls = torch.argmax(labels[0, idx_train], dim=1)
+# val_lbls = torch.argmax(labels[0, idx_val], dim=1)
+# test_lbls = torch.argmax(labels[0, idx_test], dim=1)
+# nb_classes = labels.shape[1]
+# tot = torch.zeros(1)
+#
+# accs = []
+#
+# for _ in range(50):
+#     log = LogReg(hid_units, nb_classes)
+#     opt = torch.optim.Adam(log.parameters(), lr=0.01, weight_decay=0.0)
+#     log.cuda()
+#
+#     pat_steps = 0
+#     best_acc = torch.zeros(1)
+#     best_acc = best_acc.cuda()
+#     for _ in range(100):
+#         log.train()
+#         opt.zero_grad()
+#
+#         logits = log(train_embs)
+#         loss = xent(logits, train_lbls)
+#
+#         loss.backward()
+#         opt.step()
+#
+#     logits = log(test_embs)
+#     preds = torch.argmax(logits, dim=1)
+#     acc = torch.sum(preds == test_lbls).float() / test_lbls.shape[0]
+#     accs.append(acc * 100)
+#     print(acc)
+#     tot += acc
+#
+# print('Average accuracy:', tot / 50)
+#
+# accs = torch.stack(accs)
+# print(accs.mean())
+# print(accs.std())

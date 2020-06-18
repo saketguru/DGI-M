@@ -30,10 +30,19 @@ def _read_graph_from_edgelist(ctrl, file_path):
     neigh_dict = defaultdict(list)
     max_idx = -1
     edge_num = 0
+
+    sep = None
+
     for line in in_file:
+        if "," in line:
+            sep = ","
+        elif " " in line:
+            sep = " "
+        elif "\t" in line:
+            sep = "\t"
 
         # eles = line.decode("utf-8-sig").encode("utf-8").strip().split(",")
-        eles = line.strip().split(",")
+        eles = line.strip().split(sep)
         # print (eles)
         n0, n1 = [int(ele) for ele in eles[:2]]
         # assert n0 <= n1, "first id in a row should be the smaller one..."
@@ -103,6 +112,7 @@ def _read_graph_from_edgelist(ctrl, file_path):
 def graph2nx(graph):  # mostly for debugging purpose. weights ignored.
     G = nx.Graph()
     for idx in range(graph.node_num):
+        G.add_edge(idx, idx)
         for neigh_idx in range(graph.adj_idx[idx], graph.adj_idx[idx + 1]):
             neigh = graph.adj_list[neigh_idx]
             if neigh > idx:

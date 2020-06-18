@@ -137,8 +137,19 @@ def load_data(dataset_str):  # {'pubmed', 'citeseer', 'cora'}
         ty_extended[test_idx_range - min(test_idx_range), :] = ty
         ty = ty_extended
 
-    features = sp.vstack((allx, tx)).tolil()
-    features[test_idx_reorder, :] = features[test_idx_range, :]
+    # features = sp.vstack((allx, tx)).tolil()
+    # features[test_idx_reorder, :] = features[test_idx_range, :]
+
+    from scipy.sparse import identity
+    from scipy import sparse
+
+    print (len(list(graph.keys())))
+    features = identity(len(list(graph.keys()))).tolil()
+    # features = sparse.csr_matrix(np.random.rand(len(list(graph.keys())), 10)).tolil()
+
+    # from scipy.sparse import csr_matrix
+    #
+    # features = csr_matrix(np.ones((len(allx), 1))).tolil()
 
     adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph))
 
@@ -169,7 +180,14 @@ def my_load_data(dataset_str):  # {'pubmed', 'citeseer', 'cora'}
     num_nodes = adj.shape[0]
     # print(num_nodes)
     from scipy.sparse import identity
-    features = identity(num_nodes).tolil()
+    # features = identity(num_nodes).tolil()
+
+    from scipy.sparse import csr_matrix
+    from sklearn.decomposition import PCA
+
+
+    features = csr_matrix(np.ones((num_nodes, 1))).tolil()
+
     idx_train = list(range(num_nodes))
 
     return adj, features, idx_train
